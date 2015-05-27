@@ -37,7 +37,7 @@ get '/videos/:id/edit' do
 end
 
 post '/videos/:id' do
-  sql = "update videos set video = '#{params[:video]}', description = '#{params[:description]}', url = '#{params[:url]}', genre = '#{params[:genre]}' where id = #{params[:id]}"
+  sql = "update videos set title = '#{params[:title]}', description = '#{params[:description]}', url = '#{params[:url]}', genre = '#{params[:genre]}' where id = #{params[:id]}"
   run_sql(sql)
   redirect to("/videos/#{params[:id]}")
 end
