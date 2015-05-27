@@ -20,6 +20,8 @@ end
 
 post '/videos' do
   sql = "INSERT INTO videos (title, description, url, genre) VALUES ('#{params[:title]}', '#{params[:description]}', '#{params[:url]}', '#{params[:genre]}')"
+  run_sql(sql)
+  redirect to('/videos')
 end
 
 
