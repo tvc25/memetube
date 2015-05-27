@@ -24,9 +24,33 @@ post '/videos' do
   redirect to('/videos')
 end
 
+get '/videos/:id' do
+  sql = "select * from videos where id = #{params[:id]}"
+  @video = run_sql(sql).first
+  erb :show
+end
+
+get '/videos/:id/edit' do
+  sql = "select * from videos where id = #{params[:id]}"
+  @video = run_sql(sql).first
+  erb :edit
+end
+
+post '/videos/:id' do
+  sql = "update videos set video = '#{params[:video]}', description = '#{params[:description]}', url = '#{params[:url]}', genre = '#{params[:genre]}' where id = #{params[:id]}"
+  run_sql(sql)
+  redirect to("/videos/#{params[:id]}")
+end
+
+delete '/videos/:id/delete' do
+  sql = "delete from videos where id = #{params[:id]}"
+  run_sql(sql)
+  redirect to('/videos')
+end
 
 
 
+private
 
 def run_sql(sql)
   conn = PG.connect(dbname: 'memetube', host: 'localhost')

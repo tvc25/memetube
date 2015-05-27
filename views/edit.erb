@@ -1,0 +1,9 @@
+<h1>you can edit things here</h1>
+
+<form action="/videos/<%= @video['id'] %>" method="POST">
+  <input type="text" name="title" id="title" value="<%= @video['title'] %>">
+  <input type="text" name="description" id="description" value="<%= @video['description'] %>">
+  <input type="text" name="url" id="url" value="<%= @video['url'] %>">
+  <input type="text" name="genre" id="genre" value="<%= @video['genre'] %>">
+  <button>save edits</button>
+</form>
