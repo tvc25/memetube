@@ -9,7 +9,7 @@ get '/' do
 end
 
 get '/videos' do
-  sql = 'selet * from videos'
+  sql = 'select * from videos'
   @videos = run_sql(sql)
   erb :index
 end
@@ -18,7 +18,9 @@ get '/videos/new' do
   erb :new
 end
 
-
+post '/videos' do
+  sql = "INSERT INTO videos (title, description, url, genre) VALUES ('#{params[:title]}', '#{params[:description]}', '#{params[:url]}', '#{params[:genre]}')"
+end
 
 
 
