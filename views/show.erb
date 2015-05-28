@@ -4,7 +4,7 @@
 <p><%= @video['genre'] %></p>
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/<%= @video['url'] %>" frameborder="0" allowfullscreen></iframe>
-
+<br>
 <a href="/videos/<%= @video['id'] %>/edit">Edit</a>
 
 <form action="/videos/<%= @video['id'] %>/delete" method="POST">
