@@ -1,51 +1,39 @@
 require 'sinatra'
-require 'sinatra/reloader' if development?
+require 'sinatra/contrib/all'
 require 'pg'
 require 'pry-byebug'
 
 
 get '/' do
-  redirect to ('/videos')
-end
-
-get '/videos' do
-  sql = 'select * from videos'
-  @videos = run_sql(sql)
   erb :index
 end
 
-get '/videos/new' do
-  erb :new
+get '/videos' do
+  sql = "select * from videos"
+  @videos = run_sql(sql)
+    if request.xhr?
+      json @videos.to_a
+    else
+      erb :index
+    end
 end
+
 
 post '/videos' do
-  sql = "INSERT INTO videos (title, description, url, genre) VALUES ('#{params[:title]}', '#{params[:description]}', '#{params[:url]}', '#{params[:genre]}')"
-  run_sql(sql)
-  redirect to('/videos')
-end
-
-get '/videos/:id' do
-  sql = "select * from videos where id = #{params[:id]}"
-  @video = run_sql(sql).first
-  erb :show
-end
-
-get '/videos/:id/edit' do
-  sql = "select * from videos where id = #{params[:id]}"
-  @video = run_sql(sql).first
-  erb :edit
-end
-
-post '/videos/:id' do
-  sql = "update videos set title = '#{params[:title]}', description = '#{params[:description]}', url = '#{params[:url]}', genre = '#{params[:genre]}' where id = #{params[:id]}"
-  run_sql(sql)
-  redirect to("/videos/#{params[:id]}")
-end
-
-delete '/videos/:id/delete' do
-  sql = "delete from videos where id = #{params[:id]}"
-  run_sql(sql)
-  redirect to('/videos')
+  title = params[:title]
+  description = params[:description]
+  url = params[:url]
+  genre = params[:genre]
+  sql = "insert into videos (title, description, url, genre) values ('#{title}', '#{description}', '#{url}', '#{genre}') returning *"
+  @title = run_sql(sql).first
+  @description = run_sql(sql)
+  @url = run_sql(sql)
+  @genre = run_sql(sql)
+  if request.xhr?
+    json @title
+  else
+    redirect_to '/videos'
+  end
 end
 
 
@@ -53,11 +41,11 @@ end
 private
 
 def run_sql(sql)
-  conn = PG.connect(dbname: 'memetube', host: 'localhost')
+  connect = PG.connect(dbname: 'memetube_ajax', host: 'localhost')
   begin
-    result = conn.exec(sql)
+    result = connect.exec(sql)
   ensure
-    conn.close
+    connect.close
   end
   result
 end
